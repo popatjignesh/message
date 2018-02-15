@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from msg_user.models import *
 from msg_user.serializers import *
 from rest_framework.views import APIView
-
+import datetime
 
 class que_14(APIView):
 	def get(self, request, format=None):
@@ -19,15 +19,20 @@ class que_15(APIView):
 	def get(self, request, format=None):
 		msg1 = Message.objects.all()[:5]
 		msg2 = Message.objects.all()[5:10]
+
+		"""
 		msg = []
 
 		for x in msg1:
 			msg.append(x)
 		for x in msg2:
 			msg.append(x)
+		"""
 
-		serializer = MessageSerializer(msg, many=True)
-		return Response(serializer.data, status=status.HTTP_200_OK)
+		serializer1 = MessageSerializer(msg1, many=True)
+		serializer2 = MessageSerializer(msg2, many=True)
+
+		return Response({'msg1': serializer1.data, 'msg2': serializer2.data}, status=status.HTTP_200_OK)
 
 
 class que_16(APIView):
@@ -53,7 +58,7 @@ class que_18(APIView):
 
 class que_19(APIView):
 	def get(self, request, format=None):
-		msg = Message.objects.filter(message__startswith='who')
+		msg = Message.objects.filter(message__startswith='who', created_on__contains=datetime.date(2018, 02, 15))
 		serializer = MessageSerializer(msg, many=True)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
